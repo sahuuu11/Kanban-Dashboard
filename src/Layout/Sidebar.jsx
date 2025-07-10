@@ -1,17 +1,29 @@
 import React from "react";
-import { Drawer, List, ListItem, Typography } from "@mui/material";
+import {
+  Drawer,
+  List,
+  ListItem,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 
-const Sidebar = ({ open, onCreate }) => {
+const Sidebar = ({ open, onCreate, onClose }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Drawer
-      variant={open ? "persistent" : "temporary"}
+      variant={isMobile ? "temporary" : "persistent"}
       open={open}
-      onClose={() => {}}
+      onClose={onClose}
       sx={{
         width: 240,
         flexShrink: 0,
-        "& .MuiDrawer-paper": { width: 240, boxSizing: "border-box" },
-        display: { xs: "none", sm: "block" },
+        "& .MuiDrawer-paper": {
+          width: 240,
+          boxSizing: "border-box",
+        },
       }}
     >
       <Typography variant="h6" sx={{ m: 2 }}>

@@ -1,12 +1,28 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import TaskCard from "./TaskCard";
-// import Draggable from 'react-draggable';
-import Draggable, {DraggableCore} from 'react-draggable';
+import { useDroppable, useDraggable } from "@dnd-kit/core";
 
-const KanbanColumn = ({ status, tasks, onEdit, onDrop }) => {
+const DraggableTask = ({ task, onEdit }) => {
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id: task.id,
+  });
+
+  return (
+    <div ref={setNodeRef} {...attributes} {...listeners} style={{ marginBottom: 8 }}>
+      <TaskCard task={task} onEdit={onEdit} />
+    </div>
+  );
+};
+
+const KanbanColumn = ({ status, tasks, onEdit }) => {
+  const { setNodeRef } = useDroppable({
+    id: status,
+  });
+
   return (
     <Box
+      ref={setNodeRef}
       sx={{
         minWidth: 300,
         backgroundColor: "#f0f2f5",
@@ -21,43 +37,10 @@ const KanbanColumn = ({ status, tasks, onEdit, onDrop }) => {
         {status}
       </Typography>
       {tasks.map((task) => (
-        // <Draggable
-        //   axis="x"
-        //   bounds="parent"
-        //   key={task.id}
-        //   onStop={(e, data) => onDrop(task, data.x)}
-        // >
-          <div>
-            <TaskCard task={task} onEdit={onEdit} />
-          </div>
-        // </Draggable>
+        <DraggableTask key={task.id} task={task} onEdit={onEdit} />
       ))}
     </Box>
   );
 };
 
 export default KanbanColumn;
-
-
-// ""
-// "Create a Kanban style dashboard with 3 columns
-// To Do, In progress, Done
-
-// Each task should have
-// Title
-// Description
-// Status
-// Created date
-// Asignee
-
-// allow users to:
-// Create a new task via model or side panel.
-// Edit a task inline or model.
-// Delete a task
-// Drag & drop tasks between columns
-
-// Responsivness 
-// The app should be mobile-friendly.
-// Collapsible sidebar for samller screens
-
-// Create kanban dashboard using react js with material ui antd design & react-draggable"

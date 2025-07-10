@@ -1,15 +1,24 @@
-import react from 'react';
-import './App.css'
-import KanbanBoard from './Components/KanbanBoard'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import KanbanBoard from './Components/KanbanBoard';
+import Login from './Pages/Login';
 import { TaskProvider } from './context/TaskContext';
+import Protected from './Pages/Protected';
+import './App.css';
 
-function App() {
-
+const App = () => {
   return (
-     <TaskProvider>
-      <KanbanBoard />
+    <TaskProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<Protected />}>
+            <Route path="/" element={<KanbanBoard />} />
+          </Route>
+        </Routes>
+      </Router>
     </TaskProvider>
-  )
-}
+  );
+};
 
-export default App
+export default App;

@@ -1,42 +1,27 @@
 import React, { createContext, useState } from "react";
-import dayjs from "dayjs";
+import { board } from "../Constant/BoardItem";
+import { notificationMessage } from "../Helpers/notificationHelper";
 
 export const TaskContext = createContext();
 
-const initialTasks = [
-  {
-    id: 1,
-    title: "Sample Task 1",
-    description: "This is a task",
-    status: "To Do",
-    created: dayjs(),
-    assignee: "John",
-  },
-  {
-    id: 2,
-    title: "Sample Task 2",
-    description: "Another task",
-    status: "In Progress",
-    created: dayjs(),
-    assignee: "Jane",
-  },
-];
-
 export const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, setTasks] = useState(board);
 
   const addTask = (task) => {
     setTasks((prev) => [...prev, { id: Date.now(), ...task }]);
+    notificationMessage('success', 'Task Added Successfully');
   };
 
   const updateTask = (updatedTask) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+      prev.map((record) => (record.id === updatedTask.id ? updatedTask : record))
     );
+     notificationMessage('success', 'Task Updated Successfully');
   };
 
   const deleteTask = (id) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
+    setTasks((prev) => prev.filter((record) => record.id !== id));
+    notificationMessage('success', 'Task Deleted Successfully');
   };
 
   return (
