@@ -7,23 +7,33 @@ const Login = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState({
+    email: '',
+    password: '',
+  });
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
-
+    const newErrors = {};
     // Simple validation logic
-    if (!email || !password) {
-      return setError('Both fields are required');
+    if (!email.trim()) {
+      newErrors.email = "Email is required!";
+    }
+    if (!password) {
+      newErrors.password = "Password is required!";
     }
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      return setError('Invalid email format');
+    if (email && !/\S+@\S+\.\S+/.test(email?.trim())) {
+      newErrors.email = "Invalid email!";
     }
-
     if (password.length < 6) {
-      return setError('Password must be at least 6 characters');
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setError(newErrors);
+      return;
     }
 
     const user = { email };
@@ -51,7 +61,7 @@ const Login = () => {
       }}
     >
       <Typography variant="h5" mb={2}>Kanban Dashboard Login</Typography>
-      {error && <Typography color="error" variant="body2">{error}</Typography>}
+      {/* {error && <Typography color="error" variant="body2">{error}</Typography>} */}
       <form onSubmit={handleLogin}>
         <TextField
           label="Email"
@@ -59,8 +69,9 @@ const Login = () => {
           margin="normal"
           autoComplete='off'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => { setEmail(e.target.value); setError((prev) => ({ ...prev, email: '' })) }}
         />
+        {error.email && <small style={{ color: 'red' }}>{error.email}</small>}
         <TextField
           label="Password"
           fullWidth
@@ -68,8 +79,9 @@ const Login = () => {
           type="password"
           autoComplete='off'
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => { setPassword(e.target.value); setError((prev) => ({ ...prev, password: '' })) }}
         />
+        {error.password && <small style={{ color: 'red' }}>{error.password}</small>}
         <Button
           type="submit"
           fullWidth
